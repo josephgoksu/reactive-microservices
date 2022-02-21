@@ -26,11 +26,3 @@ service:
       receivers: [otlp]
       exporters: [jaeger]
       processors: [batch]
-    metrics:
-      receivers: [otlp]
-      processors: [batch]
-      exporters: [otlp]
-    logs:
-      receivers: [otlp]
-      processors: [batch]
-      exporters: [otlp]
