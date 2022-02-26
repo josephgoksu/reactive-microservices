@@ -7,22 +7,36 @@ receivers:
           allowed_origins:
             - http://*
             - https://*
+  zipkin:
 
 exporters:
   jaeger:
-    endpoint: jaeger-all-in-one:14250
+    endpoint: jaeger:14250
     tls:
       insecure: true
+  zipkin:
+    endpoint: "http://zipkin:9411/api/v2/spans"
 
 processors:
+  memory_limiter:
+    check_interval: 1s
+    limit_percentage: 50
+    spike_limit_percentage: 30
   batch:
+
+extensions:
+  health_check:
 
 service:
   telemetry:
     logs:
       level: "debug"
+  extensions: [health_check]
   pipelines:
     traces:
       receivers: [otlp]
-      exporters: [jaeger]
+      exporters: [jaeger, zipkin]
       processors: [batch]
+    metrics:
+      receivers: [otlp]
+      exporters: [jaeger]
